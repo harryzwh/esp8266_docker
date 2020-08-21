@@ -32,9 +32,23 @@ RUN wget https://github.com/espressif/ESP8266_RTOS_SDK/releases/download/v3.3/ES
 
 RUN pip install --user -r ${IDF_PATH}/requirements.txt
 
-ENV PATH="${IDF_PATH}/tools:${PATH}"
+#Install VScode
+RUN wget https://github.com/cdr/code-server/releases/download/3.4.1/code-server-3.4.1-linux-arm64.tar.gz \
+	&& tar -zxvf code-server-3.4.1-linux-arm64.tar.gz \
+	&& mv code-server-3.4.1-linux-arm64 code-server \
+	&& rm code-server-3.4.1-linux-arm64.tar.gz
+
+EXPOSE 8080
+
+ENV PATH="${IDF_PATH}/tools:${TOOLS_PATH}/code-server/bin:${PATH}"
 ENV IDF_PATH=${IDF_PATH}
 ENV PWD=/build
+ENV SHELL /bin/bash
 
 # Change workdir
 WORKDIR /build
+
+#ENTRYPOINT ["code-server", "--auth", "none", "--bind-addr", "0.0.0.0:8080"]
+
+COPY docker-entrypoint.sh /usr/local/bin/
+ENTRYPOINT ["docker-entrypoint.sh"]
