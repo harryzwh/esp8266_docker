@@ -25,4 +25,4 @@ RUN ./bootstrap \
 	&& make
 
 RUN ./ct-ng xtensa-lx106-elf \
-	&& ./crosstool-NG/ct-ng build
+	&& ./ct-ng build
