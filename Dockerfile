@@ -4,7 +4,7 @@ ARG BUILD_PATH=/build
 RUN mkdir ${BUILD_PATH}
 WORKDIR ${BUILD_PATH}
 
-RUN apt-get update && apt-get install -y -no-install-recommends \
+RUN apt-get update && apt-get install -y --no-install-recommends \
 	gawk gperf grep gettext libncurses-dev python python-dev automake bison flex texinfo help2man libtool libtool-bin make \
 	&& apt-get clean \
 	&& rm -rf /var/lib/apt/lists/* \
