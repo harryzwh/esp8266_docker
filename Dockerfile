@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 	git ca-certificates gawk gperf grep gettext libncurses-dev python python-dev automake bison flex texinfo help2man libtool libtool-bin make \
 	&& apt-get clean \
 	&& rm -rf /var/lib/apt/lists/* \
-	&& rm -rf /tmp
+	&& rm -rf /tmp/*
 
 RUN git clone --depth 1 -b esp8266-1.22.x --single-branch https://github.com/espressif/crosstool-NG.git \
 	&& cd crosstool-NG \
