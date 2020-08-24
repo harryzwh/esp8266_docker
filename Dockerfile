@@ -12,10 +12,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 RUN git clone --depth 1 -b esp8266-1.22.x --single-branch https://github.com/espressif/crosstool-NG.git \
 	&& cd crosstool-NG \
-	&& git submodule update --init \
-	&& ${BUILD_PATH}/bootstrap \
-	&& ${BUILD_PATH}/configure --enable-local \
+	&& git submodule update --init
+
+WORKDIR ${BUILD_PATH}/crosstool-NG
+
+RUN ./bootstrap \
+	&& ./configure --enable-local \
 	&& make
 
-RUN ${BUILD_PATH}/ct-ng xtensa-lx106-elf \
-	&& ${BUILD_PATH}/ct-ng build
+RUN ./ct-ng xtensa-lx106-elf \
+	&& ./crosstool-NG/ct-ng build
