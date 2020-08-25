@@ -1,4 +1,5 @@
-FROM debian:buster-slim as compiler
+#FROM debian:buster-slim as compiler
+FROM multiarch/debian-debootstrap:arm64-buster-slim as compiler
 
 ARG BUILD_PATH=/build
 RUN mkdir ${BUILD_PATH}
@@ -27,7 +28,8 @@ RUN ./bootstrap \
 RUN ./ct-ng xtensa-lx106-elf \
 	&& ./ct-ng build
 
-FROM debian:buster-slim
+#FROM debian:buster-slim
+FROM multiarch/debian-debootstrap:arm64-buster-slim
 
 ARG TOOLS_PATH=/tools
 RUN mkdir ${TOOLS_PATH}
