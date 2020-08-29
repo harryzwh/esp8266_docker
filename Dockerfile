@@ -27,6 +27,8 @@ RUN ./bootstrap \
 
 RUN ./ct-ng xtensa-lx106-elf \
 	&& ./ct-ng build
+	
+RUN rm ${BUILD_PATH}/crosstool-NG/builds/xtensa-lx106-elf/build.log.bz2
 
 #FROM debian:buster-slim
 FROM multiarch/debian-debootstrap:arm64-buster-slim
@@ -58,10 +60,11 @@ RUN wget https://github.com/espressif/ESP8266_RTOS_SDK/releases/download/v3.3/ES
 RUN pip install --user -r ${IDF_PATH}/requirements.txt
 
 #Install VScode
-RUN wget https://github.com/cdr/code-server/releases/download/3.4.1/code-server-3.4.1-linux-arm64.tar.gz \
-	&& tar -zxvf code-server-3.4.1-linux-arm64.tar.gz \
-	&& mv code-server-3.4.1-linux-arm64 code-server \
-	&& rm code-server-3.4.1-linux-arm64.tar.gz
+ARG TARGETARCH
+RUN wget https://github.com/cdr/code-server/releases/download/3.4.1/code-server-3.4.1-linux-${TARGETARCH}.tar.gz -O code-server.tar.gz \
+	&& mkdir code-server \
+	&& tar -zxvf code-server.tar.gz --strip-components 1 -C code-server \
+	&& rm code-server.tar.gz
 
 EXPOSE 8080
 
