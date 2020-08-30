@@ -1,5 +1,4 @@
-#FROM debian:buster-slim as compiler
-FROM multiarch/debian-debootstrap:arm64-buster-slim as compiler
+FROM debian:buster-slim as compiler
 
 ARG BUILD_PATH=/build
 RUN mkdir ${BUILD_PATH}
@@ -30,8 +29,7 @@ RUN ./ct-ng xtensa-lx106-elf \
 	
 RUN rm ${BUILD_PATH}/crosstool-NG/builds/xtensa-lx106-elf/build.log.bz2
 
-#FROM debian:buster-slim
-FROM multiarch/debian-debootstrap:arm64-buster-slim
+FROM debian:buster-slim
 
 ARG TOOLS_PATH=/tools
 RUN mkdir ${TOOLS_PATH}
@@ -56,20 +54,17 @@ RUN wget https://github.com/espressif/ESP8266_RTOS_SDK/releases/download/v3.3/ES
 	&& rm ESP8266_RTOS_SDK.zip \
 	&& rm -rf ${IDF_PATH}/.git \
 	&& rm -rf ${IDF_PATH}/.github
-
 RUN pip install --user -r ${IDF_PATH}/requirements.txt
+ENV PATH="${IDF_PATH}/tools:${PATH}"
+ENV IDF_PATH=${IDF_PATH}
 
 #Install VScode
 ARG TARGETARCH
-RUN wget https://github.com/cdr/code-server/releases/download/3.4.1/code-server-3.4.1-linux-${TARGETARCH}.tar.gz -O code-server.tar.gz \
-	&& mkdir code-server \
-	&& tar -zxvf code-server.tar.gz --strip-components 1 -C code-server \
-	&& rm code-server.tar.gz
-
+RUN wget https://github.com/cdr/code-server/releases/download/v3.4.1/code-server_3.4.1_${TARGETARCH}.deb -O code-server.deb \
+	&& dpkg -i code-server.deb \
+	&& rm code-server.deb
 EXPOSE 8080
 
-ENV PATH="${IDF_PATH}/tools:${TOOLS_PATH}/code-server/bin:${PATH}"
-ENV IDF_PATH=${IDF_PATH}
 ENV PWD=/build
 ENV SHELL /bin/bash
 
